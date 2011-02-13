@@ -14,7 +14,7 @@ public class GamePanel extends JPanel
   public GamePanel()
   {
     setLayout(new BorderLayout());
-
+//comment that does not change anything
     GraphicsConfiguration config = 
 	SimpleUniverse.getPreferredConfiguration();
     Canvas3D canvas3D = new Canvas3D(config);
