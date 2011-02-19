@@ -13,6 +13,7 @@ public class ControlPanel extends JPanel
   private JRadioButton radAutoOn, radAutoOff;
   private JSlider scrSpeed;
   
+  
   public ControlPanel(GamePanel game)
   {
     life = game;
