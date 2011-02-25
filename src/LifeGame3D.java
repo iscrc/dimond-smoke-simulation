@@ -10,7 +10,7 @@ public class LifeGame3D extends JApplet
 
 	public void init()
 	{
-		game = new GamePanel();
+		game = new GamePanel(); 
 
 		control = new ControlPanel(game);
 
