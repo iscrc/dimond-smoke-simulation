@@ -1,4 +1,6 @@
 import com.sun.j3d.utils.geometry.Box;
+import com.sun.j3d.utils.geometry.Primitive;
+
 import javax.media.j3d.*;
 import javax.vecmath.*;
 
@@ -24,12 +26,15 @@ public class LifeCube
 	private void createCube(int lives)
 	{
 		float halfLength = 0.6f / findMax(rows, columns, steps);
+		//float halfLength = 0.6f / Math.max(rows, columns);
 		float dimension = 2 * halfLength;
 		float adjustX = (rows + 1) / 2.0f * dimension;
 		float adjustY = (columns + 1) / 2.0f * dimension;
 		float adjustZ = (steps + 1) / 2.0f * dimension;
+		DecimalFormat formatter = new DecimalFormat("000");
 
 		lifeCube = new BranchGroup();
+		lifeCube.setCapability(BranchGroup.ALLOW_CHILDREN_READ);
 		box = new Box[rows][columns][steps];
 		ra = new RenderingAttributes[rows][columns][steps];
 
@@ -56,11 +61,19 @@ public class LifeCube
 					SingleCell cell = new SingleCell(halfLength);
 					box[x][y][z] = new Box(
 							halfLength, halfLength, halfLength, app);
+					box[x][y][z].setName(formatter.format(x) 
+							+ formatter.format(y) + formatter.format(z));
+					box[x][y][z].setCapability(Node.ENABLE_PICK_REPORTING);
+					box[x][y][z].setCapability(Primitive.ENABLE_GEOMETRY_PICKING);
           
 					Transform3D translate = new Transform3D();
 					translate.setTranslation(
 							new Vector3f(xPos, yPos, (z + 1) * dimension - adjustZ));
 					TransformGroup tg = new TransformGroup(translate);
+					//tg.setName(formatter.format(x) 
+					//		+ formatter.format(y) + formatter.format(z));
+					//tg.setCapability(TransformGroup.ALLOW_CHILDREN_READ);
+					//tg.setCapability(Primitive.ENABLE_GEOMETRY_PICKING);
 
 					tg.addChild(box[x][y][z]);
 					tg.addChild(cell);

@@ -1,8 +1,9 @@
 import java.awt.BorderLayout;
-import java.awt.event.*;
 import java.awt.GraphicsConfiguration;
 import com.sun.j3d.utils.universe.*;
 import com.sun.j3d.utils.behaviors.mouse.*;
+import com.sun.j3d.utils.behaviors.picking.PickObject;
+
 import javax.media.j3d.*;
 import javax.vecmath.*;
 import javax.swing.JPanel;
@@ -10,7 +11,8 @@ import javax.swing.JPanel;
 public class GamePanel extends JPanel
 {
 	private BranchGroup scene, cube;
-
+	private MyMouseListener mouse;
+	
 	public GamePanel()
 	{
 		setLayout(new BorderLayout());
@@ -20,7 +22,7 @@ public class GamePanel extends JPanel
 		Canvas3D canvas3D = new Canvas3D(config);
 		add("Center", canvas3D);
 
-		createSceneGraph();
+		createSceneGraph(canvas3D);
 
 		SimpleUniverse simpleU = new SimpleUniverse(canvas3D);
 		simpleU.getViewingPlatform().setNominalViewingTransform();
@@ -34,7 +36,7 @@ public class GamePanel extends JPanel
     	scene.addChild(cube);
 	}
 
-	public void createSceneGraph()
+	public void createSceneGraph(Canvas3D canvas)
 	{
 		scene = new BranchGroup();
 		scene.setCapability(Group.ALLOW_CHILDREN_WRITE);
@@ -43,6 +45,10 @@ public class GamePanel extends JPanel
 		cube = new BranchGroup();
 		cube.setCapability(BranchGroup.ALLOW_DETACH);
 		scene.addChild(cube);
+		
+		PickObject picking = new PickObject(canvas, scene);
+		mouse = new MyMouseListener(picking);
+		canvas.addMouseListener(mouse);
 
 		Background backg = new Background(1.0f, 1.0f, 1.0f);
 		backg.setApplicationBounds(new BoundingSphere(new Point3d(), 1000.0));
@@ -60,7 +66,9 @@ public class GamePanel extends JPanel
 		objTransform.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
 		objTransform.setCapability(TransformGroup.ALLOW_TRANSFORM_READ);
 
-		objTransform.addChild(new LifeCube(rows, columns, steps, lives).getBG());
+		LifeCube lifeCube = new LifeCube(rows, columns, steps, lives);
+		mouse.newLifeCube(lifeCube);
+		objTransform.addChild(lifeCube.getBG());
 		cube.addChild(objTransform);
 
 		RightMouseRotate myMouseRotate = new RightMouseRotate();
