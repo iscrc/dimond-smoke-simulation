@@ -120,5 +120,9 @@ public class ControlPanel extends JPanel
 						this, "Invalid Number!", "Input Error", JOptionPane.ERROR_MESSAGE);
 			}
 		}
+		else if (e.getSource() == btnNext)
+		{
+			//life.startAnimate();
+		}
 	}
 }

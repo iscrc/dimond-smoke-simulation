@@ -7,12 +7,16 @@ public class LifeGame3D extends JApplet
 {
 	private GamePanel game;
 	private ControlPanel control;
+	private GameMenu menuBar;
 
 	// Initiating
 	public void init()
 	{
 		game = new GamePanel();
 
+		menuBar = new GameMenu(game);
+		setJMenuBar(menuBar);
+		
 		control = new ControlPanel(game);
 
 		// add panels to the applet windows
@@ -24,6 +28,6 @@ public class LifeGame3D extends JApplet
 	public static void main(String[] args)
 	{
 		// convert applet into application
-		new MainFrame(new LifeGame3D(), 534, 420);
+		new MainFrame(new LifeGame3D(), 534, 443);
 	}
 }
