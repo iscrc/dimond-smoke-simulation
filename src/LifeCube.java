@@ -114,6 +114,9 @@ public class LifeCube
 	public BranchGroup getBG()
 	{   return lifeCube;   }
 	
+	public RenderingAttributes[][][] getRA()
+	{	return ra;	}
+	
 	// Fill/Unfill the cell
 	public void cellLife(int x, int y, int z)
 	{

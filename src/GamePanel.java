@@ -1,18 +1,24 @@
 import java.awt.BorderLayout;
 import java.awt.GraphicsConfiguration;
+import java.awt.event.*;
+
 import com.sun.j3d.utils.universe.*;
 import com.sun.j3d.utils.behaviors.mouse.*;
 import com.sun.j3d.utils.picking.PickCanvas;
 
 import javax.media.j3d.*;
 import javax.vecmath.*;
-import javax.swing.JPanel;
+import javax.swing.*;
 
 public class GamePanel extends JPanel
+	implements ActionListener
 {
 	private BranchGroup scene, cube;
 	private LifeCube lifeCube;	
 	private MyMouseListener mouse;
+	private LifeRule rule;
+	
+	private Timer auto;
 	
 	// Constructor
 	public GamePanel()
@@ -30,6 +36,8 @@ public class GamePanel extends JPanel
 		SimpleUniverse simpleU = new SimpleUniverse(canvas3D);
 		simpleU.getViewingPlatform().setNominalViewingTransform();
 		simpleU.addBranchGraph(scene);
+		
+		auto = new Timer(100, this);
 	}
 
 	// Reset the Cube
@@ -77,6 +85,7 @@ public class GamePanel extends JPanel
 
 		// create the cube
 		lifeCube = new LifeCube(rows, columns, steps, lives);
+		rule = new LifeRule(lifeCube.getRA());
 		mouse.newLifeCube(lifeCube);
 		objTransform.addChild(lifeCube.getBG());
 		cube.addChild(objTransform);
@@ -96,8 +105,21 @@ public class GamePanel extends JPanel
 		cube.compile();
 	}
 	
-	public void LoadPreset()
+	public void startGame(boolean automatic)
 	{
-		lifeCube.preset();
+		if (automatic == true)
+			auto.start();
+		else
+			rule.nextGen();
 	}
+	
+	public void stopAnimate()
+	{	auto.stop();	}
+
+	@Override
+	public void actionPerformed(ActionEvent e)
+	{	rule.nextGen();		}
+	
+	public void LoadPreset()
+	{	lifeCube.preset();	}
 }

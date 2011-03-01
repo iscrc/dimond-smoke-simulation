@@ -60,8 +60,9 @@ public class ControlPanel extends JPanel
 		autoPanel.setLayout(new GridLayout(4, 1, 3, 3));	// layout of animate panel
 		autoPanel.setBorder(BorderFactory.createTitledBorder("Auto Animate"));	// create border frame for the panel
 
-		radAutoOn = new JRadioButton("Auto ON");
+		radAutoOn = new JRadioButton("Auto ON", true);
 		radAutoOff = new JRadioButton("Auto OFF");
+		radAutoOff.addActionListener(this);
 
 		// group radio buttons 
 		ButtonGroup gr = new ButtonGroup();
@@ -122,7 +123,9 @@ public class ControlPanel extends JPanel
 		}
 		else if (e.getSource() == btnNext)
 		{
-			//life.startAnimate();
+			life.startGame(radAutoOn.isSelected());
 		}
+		else if (e.getSource() == radAutoOff)
+		{	life.stopAnimate();		}
 	}
 }
