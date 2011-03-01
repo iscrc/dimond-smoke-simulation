@@ -166,4 +166,14 @@ public class LifeCube
 			}      
 		}
 	}
+	
+	public void preset()
+	{
+		boolean[][][] temp = (new PreLoad()).getLives();
+		
+		for (int x = 0; x < 10; x++)
+			for (int y = 0; y < 10; y++)
+				for (int z = 0; z < 10; z++)
+					ra[x][y][z].setVisible(temp[x][y][z]);
+	}
 }

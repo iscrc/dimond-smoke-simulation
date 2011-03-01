@@ -11,6 +11,7 @@ import javax.swing.JPanel;
 public class GamePanel extends JPanel
 {
 	private BranchGroup scene, cube;
+	private LifeCube lifeCube;	
 	private MyMouseListener mouse;
 	
 	// Constructor
@@ -75,7 +76,7 @@ public class GamePanel extends JPanel
 		objTransform.setCapability(TransformGroup.ALLOW_TRANSFORM_READ);
 
 		// create the cube
-		LifeCube lifeCube = new LifeCube(rows, columns, steps, lives);
+		lifeCube = new LifeCube(rows, columns, steps, lives);
 		mouse.newLifeCube(lifeCube);
 		objTransform.addChild(lifeCube.getBG());
 		cube.addChild(objTransform);
@@ -93,5 +94,10 @@ public class GamePanel extends JPanel
 		cube.addChild(myMouseZoom);
 
 		cube.compile();
+	}
+	
+	public void LoadPreset()
+	{
+		lifeCube.preset();
 	}
 }

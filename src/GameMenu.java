@@ -36,7 +36,8 @@ public class GameMenu extends JMenuBar
 	{
 		if (e.getSource() == load)
 		{
-			
+			myGame.createLifeCube(10, 10, 10, 0);
+			myGame.LoadPreset();
 		}
 	}
 }
