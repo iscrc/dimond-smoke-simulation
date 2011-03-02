@@ -82,6 +82,7 @@ public class ControlPanel extends JPanel
 
 		//Next Button
 		btnNext = new JButton("Next");
+		btnNext.addActionListener(this);
 		add(btnNext, BorderLayout.SOUTH);	// add the button to the main panel
 	}
 
@@ -122,7 +123,7 @@ public class ControlPanel extends JPanel
 			}
 		}
 		else if (e.getSource() == btnNext)
-		{
+		{	
 			life.startGame(radAutoOn.isSelected());
 		}
 		else if (e.getSource() == radAutoOff)

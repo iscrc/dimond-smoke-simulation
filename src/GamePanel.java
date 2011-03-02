@@ -43,6 +43,8 @@ public class GamePanel extends JPanel
 	// Reset the Cube
 	public void createLifeCube(int rows, int columns, int steps, int lives)
 	{
+		auto.stop();
+		
 		cube.detach();
     	mouseControl(rows, columns, steps, lives);	// create a new cube
     	scene.addChild(cube);

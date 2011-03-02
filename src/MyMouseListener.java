@@ -129,6 +129,8 @@ public class MyMouseListener
 					lifeCube.cellFrame(x, y, z, 3.0f);	// set the currently selected cube width to 3.0f
 				
 					selected = true;	// cell is selected
+					
+					System.out.println(p.getName());
 				}
 			}
 		}
