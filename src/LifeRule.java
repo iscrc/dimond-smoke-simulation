@@ -55,7 +55,7 @@ public class LifeRule
 		for (int x = 0; x < rows; x++)
 		{
 			frontX = setFront(x, rows - 1);
-			backX = setBack(x, rows -1 );
+			backX = setBack(x, rows - 1 );
 
 			for (int y = 0; y < columns; y++)
 			{
@@ -65,7 +65,7 @@ public class LifeRule
 				for (int z = 0; z < steps; z++)
 				{
 					frontZ = setFront(z, steps - 1);
-					backZ = setBack(y, steps - 1);
+					backZ = setBack(z, steps - 1);
 					
 					if(ra[frontX][frontY][frontZ].getVisible() == true)
 						neighbor++;
@@ -122,8 +122,6 @@ public class LifeRule
 					if(ra[backX][backY][backZ].getVisible() == true)
 						neighbor++;
 					
-					//System.out.println(neighbor);
-					
 					if (neighbor == 4)
 						isAlive[x][y][z] = true;
 					else
@@ -145,7 +143,7 @@ public class LifeRule
 	private int setBack(int value, int max)
 	{
 		if (value != max)
-			return value + 1;
+			return value + 1;	
 		return 0;
 	}
 }
