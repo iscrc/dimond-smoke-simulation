@@ -117,6 +117,9 @@ public class GamePanel extends JPanel
 	
 	public void stopAnimate()
 	{	auto.stop();	}
+	
+	public void setSpeed(int speed)
+	{	auto.setDelay(speed);	}
 
 	@Override
 	public void actionPerformed(ActionEvent e)

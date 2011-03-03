@@ -4,7 +4,7 @@ import javax.swing.*;
 import javax.swing.event.*;
 
 public class ControlPanel extends JPanel
-  	implements ActionListener
+  	implements ActionListener, ChangeListener
 {
 	private GamePanel life;
 
@@ -76,6 +76,7 @@ public class ControlPanel extends JPanel
 
 		scrSpeed = new JSlider(JScrollBar.HORIZONTAL, 100, 250, 175);
 		scrSpeed.setPreferredSize(new Dimension(scrSpeed.getHeight(), 500));
+		scrSpeed.addChangeListener(this);
 		autoPanel.add(scrSpeed);
     
 		add(autoPanel,BorderLayout.CENTER);	// add animate panel to the main panel
@@ -128,5 +129,11 @@ public class ControlPanel extends JPanel
 		}
 		else if (e.getSource() == radAutoOff)
 		{	life.stopAnimate();		}
+	}
+
+	@Override
+	public void stateChanged(ChangeEvent e)
+	{
+		life.setSpeed(350 - scrSpeed.getValue());
 	}
 }
