@@ -1,130 +1,97 @@
 import java.awt.BorderLayout;
 import java.awt.GraphicsConfiguration;
-import java.awt.event.*;
 
-import com.sun.j3d.utils.universe.*;
-import com.sun.j3d.utils.behaviors.mouse.*;
-import com.sun.j3d.utils.picking.PickCanvas;
+import javax.media.j3d.Background;
+import javax.media.j3d.BoundingSphere;
+import javax.media.j3d.BranchGroup;
+import javax.media.j3d.Canvas3D;
+import javax.media.j3d.Group;
+import javax.media.j3d.TransformGroup;
+import javax.swing.JPanel;
+import javax.vecmath.Point3d;
 
-import javax.media.j3d.*;
-import javax.vecmath.*;
-import javax.swing.*;
+import com.sun.j3d.utils.behaviors.mouse.MouseRotate;
+import com.sun.j3d.utils.behaviors.mouse.MouseZoom;
+import com.sun.j3d.utils.universe.SimpleUniverse;
 
 public class GamePanel extends JPanel
-	implements ActionListener
 {
-	private BranchGroup scene, cube;
-	private LifeCube lifeCube;	
-	private MyMouseListener mouse;
-	private LifeRule rule;
-	
-	private Timer auto;
-	
-	// Constructor
-	public GamePanel()
-	{
-		// panel layout
-		setLayout(new BorderLayout());
+  private BranchGroup scene, cube;
+  //Thread animation;
+  LifeCube lc ;
 
-		GraphicsConfiguration config = 
-			SimpleUniverse.getPreferredConfiguration();
-		Canvas3D canvas3D = new Canvas3D(config);
-		add("Center", canvas3D);
+  public GamePanel()
+  {
+    setLayout(new BorderLayout());
 
-		createSceneGraph(canvas3D);
+    GraphicsConfiguration config = 
+	SimpleUniverse.getPreferredConfiguration();
+    Canvas3D canvas3D = new Canvas3D(config);
+    add("Center", canvas3D);
 
-		SimpleUniverse simpleU = new SimpleUniverse(canvas3D);
-		simpleU.getViewingPlatform().setNominalViewingTransform();
-		simpleU.addBranchGraph(scene);
-		
-		auto = new Timer(100, this);
-	}
+    createSceneGraph();
 
-	// Reset the Cube
-	public void createLifeCube(int rows, int columns, int steps, int lives)
-	{
-		auto.stop();
-		
-		cube.detach();
-    	mouseControl(rows, columns, steps, lives);	// create a new cube
-    	scene.addChild(cube);
-	}
+    SimpleUniverse simpleU = new SimpleUniverse(canvas3D);
+    simpleU.getViewingPlatform().setNominalViewingTransform();
+    simpleU.addBranchGraph(scene);
+    
+    //animation = null;
+  }
 
-	// Create the Environment
-	public void createSceneGraph(Canvas3D canvas)
-	{
-		scene = new BranchGroup();
-		scene.setCapability(Group.ALLOW_CHILDREN_WRITE);
-		scene.setCapability(Group.ALLOW_CHILDREN_EXTEND);
+  public void createLifeCube(int rows, int columns, int steps, int lives)
+  {
+    cube.detach();
+    cube = mouseControl(rows, columns, steps, lives);
+    scene.addChild(cube);
+  }
 
-		cube = new BranchGroup();
-		cube.setCapability(BranchGroup.ALLOW_DETACH);
-		scene.addChild(cube);
-		
-		PickCanvas picking = new PickCanvas(canvas, scene);
-		picking.setMode(PickCanvas.GEOMETRY);
-		mouse = new MyMouseListener(picking);
-		canvas.addMouseListener(mouse);
-		canvas.addMouseMotionListener(mouse);
+  public void createSceneGraph()
+  {
+    scene = new BranchGroup();
+    scene.setCapability(Group.ALLOW_CHILDREN_WRITE);
+    scene.setCapability(Group.ALLOW_CHILDREN_EXTEND);
 
-		// set the color of the background to white
-		Background backg = new Background(1.0f, 1.0f, 1.0f);
-		backg.setApplicationBounds(new BoundingSphere(new Point3d(), 1000.0));
-		scene.addChild(backg);
+    cube = new BranchGroup();
+    cube.setCapability(BranchGroup.ALLOW_DETACH);
+    scene.addChild(cube);
 
-		scene.compile();
-	}
+    Background backg = new Background(1.0f, 1.0f, 1.0f);
+    backg.setApplicationBounds(new BoundingSphere(new Point3d(), 1000.0));
+    scene.addChild(backg);
 
-	// Create a New Cube with New MouseControl
-	public void mouseControl(int rows, int columns, int steps, int lives)
-	{
-		cube = new BranchGroup();
-		cube.setCapability(BranchGroup.ALLOW_DETACH);
+    scene.compile();
+  }
 
-		TransformGroup objTransform = new TransformGroup();
-		objTransform.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
-		objTransform.setCapability(TransformGroup.ALLOW_TRANSFORM_READ);
+  public BranchGroup mouseControl(int rows, int columns, int steps, int lives)
+  {
+    cube = new BranchGroup();
+    cube.setCapability(BranchGroup.ALLOW_DETACH);
 
-		// create the cube
-		lifeCube = new LifeCube(rows, columns, steps, lives);
-		rule = new LifeRule(lifeCube.getRA());
-		mouse.newLifeCube(lifeCube);
-		objTransform.addChild(lifeCube.getBG());
-		cube.addChild(objTransform);
+    TransformGroup objTransform = new TransformGroup();
+    objTransform.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
+    objTransform.setCapability(TransformGroup.ALLOW_TRANSFORM_READ);
 
-		// right mouse drag rotate
-		RightMouseRotate myMouseRotate = new RightMouseRotate();
-		myMouseRotate.setTransformGroup(objTransform);
-		myMouseRotate.setSchedulingBounds(new BoundingSphere());
-		cube.addChild(myMouseRotate);
+    if (lc!=null) lc.KeepRunning=false;
+    lc = new LifeCube(rows, columns, steps, lives);
+    //if (animation!=null) animation.stop();
+    //animation = new Thread(lc);
+    //animation.start();
+    new Thread(lc).start();
+    
+    objTransform.addChild(lc.getBG());
+    cube.addChild(objTransform);
 
-		// middle mouse drag zoom
-		MouseZoom myMouseZoom = new MouseZoom();
-		myMouseZoom.setTransformGroup(objTransform);
-		myMouseZoom.setSchedulingBounds(new BoundingSphere());
-		cube.addChild(myMouseZoom);
+    MouseRotate myMouseRotate = new MouseRotate();
+    myMouseRotate.setTransformGroup(objTransform);
+    myMouseRotate.setSchedulingBounds(new BoundingSphere());
+    cube.addChild(myMouseRotate);
 
-		cube.compile();
-	}
-	
-	public void startGame(boolean automatic)
-	{
-		if (automatic == true)
-			auto.start();
-		else
-			rule.nextGen();
-	}
-	
-	public void stopAnimate()
-	{	auto.stop();	}
-	
-	public void setSpeed(int speed)
-	{	auto.setDelay(speed);	}
+    MouseZoom myMouseZoom = new MouseZoom();
+    myMouseZoom.setTransformGroup(objTransform);
+    myMouseZoom.setSchedulingBounds(new BoundingSphere());
+    cube.addChild(myMouseZoom);
 
-	@Override
-	public void actionPerformed(ActionEvent e)
-	{	rule.nextGen();		}
-	
-	public void LoadPreset()
-	{	lifeCube.preset();	}
+    cube.compile();
+    return cube;
+  }
 }

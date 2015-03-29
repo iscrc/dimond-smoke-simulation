@@ -1,33 +1,29 @@
-import java.awt.*;
-import javax.swing.*;
+import java.awt.BorderLayout;
+import java.awt.Container;
+import java.awt.Frame;
+
+import javax.swing.JApplet;
 
 import com.sun.j3d.utils.applet.MainFrame;
 
 public class LifeGame3D extends JApplet
 {
-	private GamePanel game;
-	private ControlPanel control;
-	private GameMenu menuBar;
+  private GamePanel game;
+  private ControlPanel control;
 
-	// Initiating
-	public void init()
-	{
-		game = new GamePanel();
+  public void init()
+  {
+    game = new GamePanel();
 
-		menuBar = new GameMenu(game);
-		setJMenuBar(menuBar);
-		
-		control = new ControlPanel(game);
+    control = new ControlPanel(game);
 
-		// add panels to the applet windows
-		Container c = getContentPane();
-		c.add(control, BorderLayout.EAST);
-		c.add(game, BorderLayout.CENTER);
-	}
+    Container c = getContentPane();
+    c.add(control, BorderLayout.EAST);
+    c.add(game, BorderLayout.CENTER);
+  }
 
-	public static void main(String[] args)
-	{
-		// convert applet into application
-		new MainFrame(new LifeGame3D(), 534, 443);
-	}
+  public static void main(String[] args)
+  {
+    Frame frame = new MainFrame(new LifeGame3D(), 534, 420);
+  }
 }
